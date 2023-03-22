@@ -18,6 +18,8 @@ const userReducer = (pverState: IpverState = {
       return newState++
     case '-':
       return newState--
+    default :
+      return pverState
   }
 }
 
