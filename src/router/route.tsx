@@ -1,7 +1,7 @@
 import { useRoutes } from "react-router"
 import React from 'react'
 import Redirect from './Redirect'
-
+import SandBox from "../view/sandBox"
 interface Iprops {
   children: any
 }
@@ -20,10 +20,14 @@ const MRoute = () => {
       path: '/sandbox',
       element: (
         <AuthComponent>
-          {LazyLoad('sandBox')}
+          <SandBox></SandBox>
         </AuthComponent>
       ),
       children: [
+        {
+          path: '',
+          element: (<Redirect to='/sandbox/home'></Redirect>)
+        },
         {
           path: 'home',
           element: (LazyLoad('sandBox/home'))
@@ -44,7 +48,7 @@ const MRoute = () => {
     },
     {
       path: '/',
-      element: (<Redirect to='/sandBox/home'></Redirect>)
+      element: (<Redirect to='/sandbox'></Redirect>)
     },
     {
       path: '*',

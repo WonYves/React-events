@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import {
   HomeOutlined,
   MenuOutlined,
@@ -15,11 +15,11 @@ import { getMenu } from '../../api/menuList'
 const { Sider } = Layout;
 
 interface IMenuList {
-  children?: [],
+  children?:[],
   grade: number
   id: number
   key: string
-  label: string
+  title: string
   pagepermisson: number
 }
 const { SubMenu } = Menu
@@ -38,7 +38,6 @@ export default function SideMenu() {
   }, [])
 
   useEffect(() => {
-    console.log(location.pathname)
     getList()
   }, [])
 
@@ -61,11 +60,11 @@ export default function SideMenu() {
   }
 
   //渲染侧边栏
-  const RenderMenu = (menuList: Array<any>) => {
+  const RenderMenu = useCallback((menu:Array<any>) => {
 
     return (
-      menuList.map(item => {
-        if (item.children?.length > 0 && item.pagepermisson) {
+      menu.map((item:IMenuList) => {
+        if (item.children && item.children.length > 0 && item.pagepermisson) {
           return (
             <SubMenu key={item.key} title={item.title} icon={iconList[item.key]}>
               {RenderMenu(item.children)}
@@ -80,7 +79,10 @@ export default function SideMenu() {
         }
       })
     )
-  }
+  },[])
+
+  const selectKey = [location.pathname.replace('/sandbox', '')]
+  const openKey = ['/' + location.pathname.split('/')[2]]
 
   return (
     <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -90,8 +92,8 @@ export default function SideMenu() {
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={['']}
-            defaultOpenKeys = {[location.pathname]}
+            selectedKeys={selectKey}
+            defaultOpenKeys={openKey}
           >
             {RenderMenu(menuList)}
           </Menu>
