@@ -29,15 +29,15 @@ const MRoute = () => {
           element: (LazyLoad('sandBox/home'))
         },
         {
-          path: 'rightManage/rightList',
+          path: 'right-manage/right/list',
           element: (LazyLoad('sandBox/rightManage/rightList'))
         },
         {
-          path: 'rightManage/roleList',
+          path: 'right-manage/role/list',
           element: (LazyLoad('sandBox/rightManage/roleList'))
         },
         {
-          path: 'userManage/userList',
+          path: 'user-manage/list',
           element: (LazyLoad('sandBox/userManage/userList'))
         },
       ]
