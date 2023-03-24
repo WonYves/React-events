@@ -22,6 +22,7 @@ export default function SandBox() {
               padding: 24,
               minHeight: 280,
               background: colorBgContainer,
+              overflow:'auto'
             }}
           >
             <Outlet></Outlet>

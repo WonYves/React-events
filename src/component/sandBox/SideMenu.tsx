@@ -7,7 +7,7 @@ import {
   AppstoreAddOutlined,
   ClusterOutlined,
   LaptopOutlined,
- } from '@ant-design/icons';
+} from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import style from './sidMenu.module.scss'
 import { useNavigate } from 'react-router';
@@ -15,7 +15,7 @@ import { getMenu } from '../../api/menuList'
 const { Sider } = Layout;
 
 interface IMenuList {
-  children?:[],
+  children?: [],
   grade: number
   id: number
   key: string
@@ -33,7 +33,6 @@ export default function SideMenu() {
   // 侧边栏列表
   const getList = useCallback(async () => {
     const res = await getMenu()
-    console.log(res.data)
     setMenuList(res.data)
   }, [])
 
@@ -47,23 +46,25 @@ export default function SideMenu() {
     navigate(`/sandbox${item.key}`)
   }
 
-  const iconList:any = {
-    '/home':<HomeOutlined />,
-    '/user-manage/list':<MenuOutlined />,
-    '/right-manage/right/list':<MenuOutlined />,
-    '/right-manage/role/list':<MenuOutlined />,
-    '/user-manage':<TeamOutlined />,
-    '/right-manage':<DeploymentUnitOutlined />,
-    '/news-manage':<AppstoreAddOutlined />,
-    '/audit-manage':<ClusterOutlined />,
-    '/publish-manage':<LaptopOutlined />,
+  //侧边栏图标
+  const iconList: any = {
+    '/home': <HomeOutlined />,
+    '/user-manage/list': <MenuOutlined />,
+    '/right-manage/right/list': <MenuOutlined />,
+    '/right-manage/role/list': <MenuOutlined />,
+    '/user-manage': <TeamOutlined />,
+    '/right-manage': <DeploymentUnitOutlined />,
+    '/news-manage': <AppstoreAddOutlined />,
+    '/audit-manage': <ClusterOutlined />,
+    '/publish-manage': <LaptopOutlined />,
   }
 
   //渲染侧边栏
-  const RenderMenu = useCallback((menu:Array<any>) => {
+  const RenderMenu = useCallback((menu: Array<IMenuList>) => {
 
     return (
-      menu.map((item:IMenuList) => {
+      menu.map((item: IMenuList) => {
+        // 没有子级和子级的长度为零和有分页的
         if (item.children && item.children.length > 0 && item.pagepermisson) {
           return (
             <SubMenu key={item.key} title={item.title} icon={iconList[item.key]}>
@@ -72,23 +73,23 @@ export default function SideMenu() {
           )
         } else {
           return (
-            item.pagepermisson && <Menu.Item key={item.key} icon={iconList[item.key]}   onClick={handleMenu.bind(null, item)}>
+            Boolean(item.pagepermisson) && <Menu.Item key={item.key} icon={iconList[item.key]} onClick={handleMenu.bind(null, item)}>
               <span>{item.title}</span>
             </Menu.Item>
           )
         }
       })
     )
-  },[])
+  }, [])
 
   const selectKey = [location.pathname.replace('/sandbox', '')]
   const openKey = ['/' + location.pathname.split('/')[2]]
 
   return (
     <Sider trigger={null} collapsible collapsed={collapsed}>
-      <div style={{display:'flex',height:'100%',flexDirection:'column'}}>
+      <div style={{ display: 'flex', height: '100%', flexDirection: 'column' }}>
         <div className={style.logo}>React-Events</div>
-        <div style={{flex:1, overflow:'auto'}}>
+        <div style={{ flex: 1, overflow: 'auto' }}>
           <Menu
             theme="dark"
             mode="inline"
