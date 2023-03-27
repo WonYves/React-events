@@ -1,28 +1,23 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { getUserList, getRegions, getUser } from '../../../api/userList'
-import { Table, Button, Switch, Modal, Form, Input, Select } from 'antd'
+import { getUserList, getRegions, getUser, deleteUsers, changeUsers } from '../../../api/userList'
+import { Table, Button, Switch, Modal, Form, Input, Select, message } from 'antd'
 import type { ColumnsType } from 'antd/es/table';
 import { FormOutlined, CloseCircleOutlined } from '@ant-design/icons'
 import type { SelectProps } from 'antd';
 import UserForm from './components/userForm';
 
-type PeopleType = {
-  id: number;
-  default: boolean;
-  password: number;
-  region: string;
-  role: UserType;
-  roleState: boolean;
-  username: string;
-}
+const { confirm } = Modal
 
 const UserList = () => {
 
+  const [messageApi, contextHolder] = message.useMessage();
   const [user, setUser] = useState([])
   const [roleList, setroleList] = useState<SelectProps['options']>([])
   const [regionList, setregionList] = useState<SelectProps['options']>([])
   const [loading, setloading] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isShoWUp, setIsShowUp] = useState(false)
+  const [itemRecord, setItemRecord] = useState({})
 
   // 用户
   const getData = useCallback(async () => {
@@ -51,13 +46,50 @@ const UserList = () => {
     setloading(false)
   }, [])
 
+  // 删除角色
+  const deleteData = useCallback(async (id: number) => {
+    const res = await deleteUsers(id)
+    getData()
+  }, [])
+
+  // 更改角色状态
+  const changeData = useCallback(async (id: number, roleState: boolean) => {
+    const res = await changeUsers(id, roleState)
+    messageApi.info('修改成功！')
+    getData()
+  }, [])
+
+
+  const handleDelete = (id: number) => {
+    confirm({
+      title: '确定要删除吗?',
+      okText: '确定',
+      cancelText: '取消',
+      onOk() {
+        deleteData(id)
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    })
+  }
+
   useEffect(() => {
     getData()
   }, [])
 
   // 用户状态
-  const onChange = (ischeck: boolean) => {
-    console.log(ischeck)
+  const onChange = (record: PeopleType) => {
+    console.log(record)
+    record.roleState = !record.roleState
+    changeData(record.id, record.roleState)
+  }
+
+  //编辑用户信息
+  const handleUpdate = (record: PeopleType) => {
+    console.log(record);
+    setItemRecord(record)
+    setIsShowUp(true)
   }
 
   // 表格
@@ -89,7 +121,7 @@ const UserList = () => {
       dataIndex: 'roleState',
       align: 'center',
       render: (ischeck, record) => (
-        <Switch checked={ischeck} disabled={record.default} onChange={onChange.bind(null, ischeck)} />
+        <Switch checked={ischeck} disabled={record.default} onChange={onChange.bind(null, record)} />
       )
     },
     {
@@ -98,8 +130,9 @@ const UserList = () => {
       render: (record) => {
         return (
           <div>
-            <Button type='primary' danger icon={<CloseCircleOutlined />} disabled={record.default} style={{ marginRight: 10 }} ></Button>
-            <Button type='primary' icon={<FormOutlined />} disabled={record.default}></Button>
+            <Button type='primary' onClick={() => handleDelete(record.id)}
+              danger icon={<CloseCircleOutlined />} disabled={record.default} style={{ marginRight: 10 }} ></Button>
+            <Button type='primary' icon={<FormOutlined />} disabled={record.default} onClick={() => handleUpdate(record)}></Button>
           </div>
         )
       }
@@ -130,8 +163,24 @@ const UserList = () => {
         onCancel={() => setIsModalOpen(false)}
         title='添加用户信息'
       >
-        <UserForm regionList={regionList} roleList={roleList} close={() => setIsModalOpen(false)}></UserForm>
+        <UserForm regionList={regionList} roleList={roleList} close={() => setIsModalOpen(false)} getData={getData}></UserForm>
       </Modal>
+
+      <Modal
+        open={isShoWUp}
+        footer={null}
+        onCancel={() => setIsShowUp(false)}
+        title='更新用户信息'
+      >
+        <UserForm
+          regionList={regionList}
+          roleList={roleList}
+          close={() => setIsShowUp(false)}
+          getData={getData}
+          ItemRecord={itemRecord}
+        ></UserForm>
+      </Modal>
+      {contextHolder}
     </div>
   )
 }

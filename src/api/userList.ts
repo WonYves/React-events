@@ -37,7 +37,7 @@ export const getRegions = () => {
   })
 }
 
-//区域列表
+//添加用户
 export const addUsers = (params:IadduserType) => {
   return request({
     url: `/users`,
@@ -46,6 +46,24 @@ export const addUsers = (params:IadduserType) => {
       ...params,
       roleState:true,
       defalut:false
+    }
+  })
+}
+
+//删除用户 
+export const deleteUsers = (id:number) => {
+  return request({
+    url:'/users/' + id,
+    method:'delete'
+  })
+}
+//修改用户状态 
+export const changeUsers = (id:number, roleState:boolean) => {
+  return request({
+    url:'/users/' + id,
+    method:'patch',
+    data:{
+      roleState
     }
   })
 }

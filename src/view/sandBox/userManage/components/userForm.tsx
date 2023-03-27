@@ -1,10 +1,13 @@
-import React, { useCallback, useState } from 'react'
-import { Form, Input, Select, Button } from 'antd'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Form, Input, Select, Button, Modal } from 'antd'
 import { addUsers } from '../../../../api/userList';
+
 interface IUserporps {
   regionList: any;
   roleList: any;
-  close: Function
+  close: Function;
+  getData: Function;
+  ItemRecord?: any;
 }
 
 type valueType = {
@@ -15,11 +18,11 @@ type valueType = {
 }
 export default function UserForm(props: IUserporps) {
 
-  const { regionList, roleList, close } = props
+  const { regionList, roleList, close, getData, ItemRecord } = props
   const [isDisabled, setIsDisabled] = useState(false)
   // 提交表单
-  const onFinish = (value: valueType, id?:number) => {
-    close
+  const onFinish = (value: valueType, id?: number) => {
+    close()
     addData(value)
   }
 
@@ -27,7 +30,21 @@ export default function UserForm(props: IUserporps) {
 
   const addData = useCallback(async (params: IadduserType) => {
     const res = await addUsers(params)
+    form.resetFields()
+    getData()
   }, [])
+
+  useEffect(() => {
+    console.log(ItemRecord);
+    if(ItemRecord && ItemRecord.length !== 0){
+      form.setFieldsValue({
+        username: ItemRecord.username,
+        password: ItemRecord.password,
+        region:ItemRecord.region,
+        roleId:ItemRecord.role.roleName,
+      })
+    }
+  }, [ItemRecord])
 
   return (
     <div>
@@ -83,7 +100,7 @@ export default function UserForm(props: IUserporps) {
           />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 16, span: 16 }}>
-          <Button onClick={() => close}>
+          <Button onClick={() => close()}>
             取消
           </Button>
           <Button style={{ marginLeft: 20 }} type="primary" htmlType="submit">
