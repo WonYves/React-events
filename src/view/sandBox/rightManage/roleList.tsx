@@ -6,13 +6,6 @@ import { getUser, deleteUser, changeUserPower } from '../../../api/userList';
 import { getMenu } from '../../../api/menuList';
 import { UnorderedListOutlined, CloseCircleOutlined } from '@ant-design/icons'
 
-interface UserType {
-  id: number;
-  roleName: string;
-  roleType: number;
-  rights: [];
-}
-
 interface Icheck {
   checked: [];
   [key: string]: any;
