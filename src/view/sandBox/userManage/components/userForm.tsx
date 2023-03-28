@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Form, Input, Select, Button, Modal } from 'antd'
+import { Form, Input, Select, Button, Modal, message } from 'antd'
 import { addUsers } from '../../../../api/userList';
 
 interface IUserporps {
@@ -8,6 +8,7 @@ interface IUserporps {
   close: Function;
   getData: Function;
   ItemRecord?: any;
+  isforbidden?: boolean;
 }
 
 type valueType = {
@@ -18,30 +19,41 @@ type valueType = {
 }
 export default function UserForm(props: IUserporps) {
 
-  const { regionList, roleList, close, getData, ItemRecord } = props
-  const [isDisabled, setIsDisabled] = useState(false)
+  const { regionList, roleList, close, getData, ItemRecord, isforbidden } = props
+  const [isDisabled, setIsDisabled] = useState<boolean>(false)
+  const [isChange, setIsChange] = useState<boolean>(false)
+
   // 提交表单
   const onFinish = (value: valueType, id?: number) => {
     close()
+    setIsChange(false)
+    form.resetFields()
     addData(value)
   }
 
   const [form] = Form.useForm()
 
+  //添加角色
   const addData = useCallback(async (params: IadduserType) => {
     const res = await addUsers(params)
     form.resetFields()
+    message.success('添加成功')
     getData()
   }, [])
 
+
   useEffect(() => {
-    console.log(ItemRecord);
-    if(ItemRecord && ItemRecord.length !== 0){
+    setIsDisabled((isforbidden) as boolean)
+  }, [isforbidden])
+
+  useEffect(() => {
+    if (ItemRecord && ItemRecord.length !== 0) {
+      setIsChange(true)
       form.setFieldsValue({
         username: ItemRecord.username,
         password: ItemRecord.password,
-        region:ItemRecord.region,
-        roleId:ItemRecord.role.roleName,
+        region: ItemRecord.region,
+        roleId: ItemRecord.role.roleName,
       })
     }
   }, [ItemRecord])
@@ -72,6 +84,7 @@ export default function UserForm(props: IUserporps) {
           label="区域"
           name="region"
           rules={isDisabled ? [] : [{ required: true, message: '请选择区域!' }]}
+          initialValue={{}}
         >
           <Select disabled={isDisabled}
             options={(regionList || []).map((item: regionsType) => ({
@@ -100,7 +113,11 @@ export default function UserForm(props: IUserporps) {
           />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 16, span: 16 }}>
-          <Button onClick={() => close()}>
+          <Button onClick={() => {
+            setIsChange(false)
+            form.resetFields()
+            close()
+          }}>
             取消
           </Button>
           <Button style={{ marginLeft: 20 }} type="primary" htmlType="submit">

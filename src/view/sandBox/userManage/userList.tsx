@@ -17,6 +17,7 @@ const UserList = () => {
   const [loading, setloading] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isShoWUp, setIsShowUp] = useState(false)
+  const [isDisabled, setIsDisabled] = useState(false)
   const [itemRecord, setItemRecord] = useState({})
 
   // 用户
@@ -33,7 +34,6 @@ const UserList = () => {
     setloading(true)
     const res = await getRegions()
     setregionList(res.data)
-    console.log(res.data)
     setloading(false)
   }, [])
 
@@ -42,7 +42,6 @@ const UserList = () => {
     setloading(true)
     const res = await getUser()
     setroleList(res.data)
-    console.log(res.data)
     setloading(false)
   }, [])
 
@@ -87,9 +86,11 @@ const UserList = () => {
 
   //编辑用户信息
   const handleUpdate = (record: PeopleType) => {
-    console.log(record);
+    getDate()
+    getResData()
     setItemRecord(record)
     setIsShowUp(true)
+    record.roleId === 1? setIsDisabled(true): setIsDisabled(false)
   }
 
   // 表格
@@ -108,7 +109,7 @@ const UserList = () => {
       title: '角色名称',
       align: 'center',
       render: (record) => {
-        return record.role.roleName
+        return record.role?.roleName
       }
     },
     {
@@ -178,6 +179,7 @@ const UserList = () => {
           close={() => setIsShowUp(false)}
           getData={getData}
           ItemRecord={itemRecord}
+          isforbidden={isDisabled}
         ></UserForm>
       </Modal>
       {contextHolder}

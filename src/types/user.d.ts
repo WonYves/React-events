@@ -10,3 +10,15 @@ interface regionsType{
   value:string;
   title:string;
 }
+
+
+type PeopleType = {
+  id: number;
+  default?: boolean;
+  password: number;
+  region: string;
+  role?: UserType;
+  roleState?: boolean;
+  username: string;
+  roleId:any;
+}
