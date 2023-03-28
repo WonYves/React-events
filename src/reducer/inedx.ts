@@ -1,24 +1,24 @@
-import deepcopy from '../../utils/deepcopy'
+import deepcopy from '../utils/deepcopy'
 
 interface IpverState {
-  timer: number
+  user: PeopleType | null
 }
 
 interface Iaction {
   type: string
-  [key: string]: any
+  payload: any
 }
 
 const userReducer = (pverState: IpverState = {
-  timer: 0
+  user: {}
 }, action: Iaction) => {
   let newState = deepcopy(pverState)
   switch (action.type) {
-    case '+':
-      return newState++
-    case '-':
-      return newState--
-    default :
+    case 'SignInlogin':
+      return newState.user = action.payload
+    case 'LogOut':
+      return newState = {}
+    default:
       return pverState
   }
 }

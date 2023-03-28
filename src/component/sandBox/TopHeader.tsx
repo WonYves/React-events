@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -6,11 +6,15 @@ import {
 } from '@ant-design/icons';
 import { Layout, theme, Dropdown, Avatar } from 'antd';
 import type { MenuProps } from 'antd';
+import { outTo } from '../../reducer/actions';
+import { connect } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 const { Header } = Layout;
 
-export default function TopHeader() {
+const TopHeader = (props: any) => {
 
+  const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -20,19 +24,25 @@ export default function TopHeader() {
     setCollapsed(!collapsed)
   }
 
+  useEffect(() => {
+   console.log(props);
+  }, [])
+
   const items: MenuProps['items'] = [
     {
       key: 1,
       label: (
         <div>
-          超级管理员
+          {props.user?.role?.roleName}
         </div>
       ),
     },
     {
       key: 2,
       label: (
-        <div>
+        <div onClick={() => {
+          props.outTo('')
+        }}>
           退出
         </div>
       ),
@@ -47,7 +57,7 @@ export default function TopHeader() {
         <span style={{ fontSize: 16 }}>
           Hello
           <span style={{ color: 'skyblue', marginLeft: 5 }}>
-            admin
+            {props.user?.username}
           </span>
         </span>
         <Dropdown menu={{ items }}>
@@ -59,3 +69,15 @@ export default function TopHeader() {
     </Header>
   )
 }
+
+const mapUserList = (state: any) => {
+  return {
+    user: state.userReducer
+  }
+}
+
+const mapdispatchUser = {
+  outTo
+}
+
+export default connect(mapUserList, mapdispatchUser)(TopHeader)

@@ -2,6 +2,7 @@ import { useRoutes } from "react-router"
 import React from 'react'
 import Redirect from './Redirect'
 import SandBox from "../view/sandBox"
+import { store } from "../store"
 interface Iprops {
   children: any
 }
@@ -13,15 +14,9 @@ const MRoute = () => {
       element: (LazyLoad('login'))
     },
     {
-      path: '/register',
-      element: (LazyLoad('register'))
-    },
-    {
       path: '/sandbox',
       element: (
-        <AuthComponent>
-          <SandBox></SandBox>
-        </AuthComponent>
+        <SandBox></SandBox>
       ),
       children: [
         {
@@ -58,12 +53,6 @@ const MRoute = () => {
   ])
 
   return (element)
-}
-
-// 封装路由拦截
-const AuthComponent = (props: Iprops) => {
-  const isLogin = localStorage.getItem('token')
-  return isLogin ? props.children : <Redirect to='/login'></Redirect>
 }
 
 // 封装路由懒加载

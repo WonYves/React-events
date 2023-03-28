@@ -81,7 +81,7 @@ const UserList = () => {
   const onChange = (record: PeopleType) => {
     console.log(record)
     record.roleState = !record.roleState
-    changeData(record.id, record.roleState)
+    changeData((record.id as number), record.roleState)
   }
 
   //编辑用户信息

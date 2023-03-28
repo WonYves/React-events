@@ -13,12 +13,12 @@ interface regionsType{
 
 
 type PeopleType = {
-  id: number;
+  id?: number;
   default?: boolean;
-  password: number;
-  region: string;
+  password?: number;
+  region?: string;
   role?: UserType;
   roleState?: boolean;
-  username: string;
-  roleId:any;
+  username?: string;
+  roleId?:any;
 }

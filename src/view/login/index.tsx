@@ -1,21 +1,26 @@
-import { Fragment, useCallback } from 'react'
+import { Fragment, useCallback, useEffect } from 'react'
 import style from './login.module.scss'
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Input, Button, Form, message } from 'antd';
 import { useNavigate } from 'react-router';
 import { ApiLogin } from '../../api/login';
-const Login = () => {
+import { logTo } from '../../reducer/actions';
+import { connect } from 'react-redux';
+const Login = (props:any) => {
+
+  const {logTo} = props
 
   const navigate = useNavigate()
 
   const Login = useCallback(async (username: string, password: string) => {
     const res = await ApiLogin(username, password)
-    console.log(res.data);
     if (res.data.length === 0) {
       message.error('登录失败')
     } else {
       message.success('登录成功!')
-      // navigate('/sandbox')
+      console.log(res.data[0])
+      logTo(res.data[0]);
+      navigate('/sandbox')
     }
   }, [])
 
@@ -49,4 +54,10 @@ const Login = () => {
   )
 }
 
-export default Login
+const mapdispatchUser = {
+  logTo
+}
+
+
+
+export default connect(null,mapdispatchUser)(Login)
