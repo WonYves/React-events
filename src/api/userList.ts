@@ -67,3 +67,16 @@ export const changeUsers = (id:number, roleState:boolean) => {
     }
   })
 }
+
+//修改用户
+export const UpUsers = (id:number, params:IadduserType) => {
+  return request({
+    url: `/users/${id}`,
+    method: 'patch',
+    data: {
+      ...params,
+      roleState:true,
+      defalut:false
+    }
+  })
+}

@@ -86,6 +86,7 @@ const UserList = () => {
 
   //编辑用户信息
   const handleUpdate = (record: PeopleType) => {
+    console.log(record);
     getDate()
     getResData()
     setItemRecord(record)
@@ -101,7 +102,7 @@ const UserList = () => {
       align: 'center',
       render: (region) => {
         return (
-          <div>{region === '' ? '全球' : region}</div>
+          <div style={{fontWeight:'bold'}}>{region === '' ? '全球' : region}</div>
         )
       }
     },

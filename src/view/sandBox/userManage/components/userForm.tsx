@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Form, Input, Select, Button, Modal, message } from 'antd'
-import { addUsers } from '../../../../api/userList';
+import { addUsers, UpUsers } from '../../../../api/userList';
 
 interface IUserporps {
   regionList: any;
@@ -22,22 +22,32 @@ export default function UserForm(props: IUserporps) {
   const { regionList, roleList, close, getData, ItemRecord, isforbidden } = props
   const [isDisabled, setIsDisabled] = useState<boolean>(false)
   const [isChange, setIsChange] = useState<boolean>(false)
+  const [eventId, setEventId] = useState<number>()
 
   // 提交表单
-  const onFinish = (value: valueType, id?: number) => {
-    close()
-    setIsChange(false)
-    form.resetFields()
-    addData(value)
+  const onFinish = (value: valueType) => {
+    isChange ? upData((eventId as number), value) : addData(value)
   }
 
   const [form] = Form.useForm()
 
   //添加角色
   const addData = useCallback(async (params: IadduserType) => {
-    const res = await addUsers(params)
+    await addUsers(params)
     form.resetFields()
     message.success('添加成功')
+    close()
+    setIsChange(false)
+    getData()
+  }, [])
+
+  //修改角色
+  const upData = useCallback(async (id: number, params: IadduserType) => {
+    await UpUsers(id, params)
+    form.resetFields()
+    message.success('更新成功')
+    close()
+    setIsChange(false)
     getData()
   }, [])
 
@@ -47,13 +57,15 @@ export default function UserForm(props: IUserporps) {
   }, [isforbidden])
 
   useEffect(() => {
+    console.log(ItemRecord);
     if (ItemRecord && ItemRecord.length !== 0) {
       setIsChange(true)
+      setEventId(ItemRecord.id)
       form.setFieldsValue({
         username: ItemRecord.username,
         password: ItemRecord.password,
         region: ItemRecord.region,
-        roleId: ItemRecord.role.roleName,
+        roleId: ItemRecord.roleId,
       })
     }
   }, [ItemRecord])
@@ -83,8 +95,7 @@ export default function UserForm(props: IUserporps) {
         <Form.Item
           label="区域"
           name="region"
-          rules={isDisabled ? [] : [{ required: true, message: '请选择区域!' }]}
-          initialValue={{}}
+          rules={isDisabled? []:[{ required: true, message: '请选择区域!' }]}
         >
           <Select disabled={isDisabled}
             options={(regionList || []).map((item: regionsType) => ({
@@ -96,7 +107,7 @@ export default function UserForm(props: IUserporps) {
         <Form.Item
           label='角色'
           name="roleId"
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: '请选择角色!' }]}
         >
           <Select onChange={(value) => {
             if (value === 1) {
@@ -121,9 +132,9 @@ export default function UserForm(props: IUserporps) {
             取消
           </Button>
           <Button style={{ marginLeft: 20 }} type="primary" htmlType="submit">
-            确定
+            {isChange ? '更新' : '确定'}
           </Button>
-        </Form.Item >
+        </Form.Item>
       </Form>
     </div>
   )
