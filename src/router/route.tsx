@@ -2,10 +2,6 @@ import { useRoutes } from "react-router"
 import React from 'react'
 import Redirect from './Redirect'
 import SandBox from "../view/sandBox"
-import { store } from "../store"
-interface Iprops {
-  children: any
-}
 
 const MRoute = () => {
   const element = useRoutes([

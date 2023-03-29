@@ -8,7 +8,7 @@ import {
   ClusterOutlined,
   LaptopOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Avatar } from 'antd';
 import style from './sidMenu.module.scss'
 import { useNavigate } from 'react-router';
 import { getMenu } from '../../api/menuList'
@@ -88,7 +88,10 @@ export default function SideMenu() {
   return (
     <Sider trigger={null} collapsible collapsed={collapsed}>
       <div style={{ display: 'flex', height: '100%', flexDirection: 'column' }}>
-        <div className={style.logo}>React-Events</div>
+        <div className={style.logo}>
+          <Avatar size={30} src='https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg'></Avatar>
+          <div className={style.title}>ReactEvents</div>
+        </div>
         <div style={{ flex: 1, overflow: 'auto' }}>
           <Menu
             theme="dark"

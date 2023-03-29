@@ -53,16 +53,16 @@ const TopHeader = (props: any) => {
     <Header style={{ padding: '0 16px', background: colorBgContainer }}>
       {collapsed ? <MenuUnfoldOutlined onClick={handleChange} /> : <MenuFoldOutlined onClick={handleChange} />}
 
-      <div style={{ float: 'right' }}>
-        <span style={{ fontSize: 16 }}>
+      <div style={{ float: 'right', marginRight:20 }}>
+        <span style={{ fontSize: 18  }}>
           Hello
-          <span style={{ color: 'skyblue', marginLeft: 5 }}>
+          <span style={{ marginLeft: 5, fontWeight:'bold' }}>
             {props.user?.username}
           </span>
         </span>
         <Dropdown menu={{ items }}>
           <span style={{ marginLeft: 10 }}>
-            <Avatar shape="square" size={42} icon={<UserOutlined />} />
+            <Avatar shape="square" src='https://p3-passport.byteimg.com/img/user-avatar/f89b17f66aae7e2c4b176f04bcf2aa65~180x180.awebp' size={50} />
           </span>
         </Dropdown>
       </div>
