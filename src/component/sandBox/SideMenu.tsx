@@ -13,7 +13,7 @@ import style from './sidMenu.module.scss'
 import { useNavigate } from 'react-router';
 import { getMenu } from '../../api/menuList'
 const { Sider } = Layout;
-
+import { connect } from 'react-redux';
 interface IMenuList {
   children?: [],
   grade: number
@@ -24,7 +24,7 @@ interface IMenuList {
 }
 const { SubMenu } = Menu
 
-export default function SideMenu() {
+function SideMenu(props: any) {
 
 
   const [collapsed, setCollapsed] = useState(false);
@@ -60,12 +60,14 @@ export default function SideMenu() {
   }
 
   //渲染侧边栏
-  const RenderMenu = useCallback((menu: Array<IMenuList>) => {
+  const RenderMenu = (menu: Array<IMenuList>) => {
 
     return (
       menu.map((item: IMenuList) => {
         // 没有子级和子级的长度为零和有分页的
-        if (item.children && item.children.length > 0 && item.pagepermisson) {
+
+        const roleList = props.user.userReducer.role.rights
+        if (item.children && item.children.length > 0 && item.pagepermisson && roleList.includes(item.key) ) {
           return (
             <SubMenu key={item.key} title={item.title} icon={iconList[item.key]}>
               {RenderMenu(item.children)}
@@ -73,14 +75,14 @@ export default function SideMenu() {
           )
         } else {
           return (
-            Boolean(item.pagepermisson) && <Menu.Item key={item.key} icon={iconList[item.key]} onClick={handleMenu.bind(null, item)}>
+            (Boolean(item.pagepermisson) && roleList.includes(item.key)) && <Menu.Item key={item.key} icon={iconList[item.key]} onClick={handleMenu.bind(null, item)}>
               <span>{item.title}</span>
             </Menu.Item>
           )
         }
       })
     )
-  }, [])
+  }
 
   const selectKey = [location.pathname.replace('/sandbox', '')]
   const openKey = ['/' + location.pathname.split('/')[2]]
@@ -106,3 +108,11 @@ export default function SideMenu() {
     </Sider>
   )
 }
+
+const mapgetUser = (state:any) => {
+  return {
+    user : state
+  }
+}
+
+export default connect(mapgetUser)(SideMenu)

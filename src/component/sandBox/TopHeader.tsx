@@ -24,10 +24,6 @@ const TopHeader = (props: any) => {
     setCollapsed(!collapsed)
   }
 
-  useEffect(() => {
-   console.log(props);
-  }, [])
-
   const items: MenuProps['items'] = [
     {
       key: 1,

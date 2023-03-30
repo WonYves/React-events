@@ -91,7 +91,7 @@ export default function RoleList() {
     getDate()
   }, [])
   // 更改权限 
-  const changeIt = useCallback(async (id: number, rights: []) => {
+  const changeIt = useCallback(async (id: number, rights:any) => {
     setLoading(true)
     const res = await changeUserPower(id, rights)
     setLoading(false)
@@ -105,7 +105,7 @@ export default function RoleList() {
   };
   // 确认更改
   const handleOk = () => {
-    changeIt((rightId as number), (rightList as []))
+    changeIt((rightId as number), rightList)
     setIsModalOpen(false);
   };
   // 关闭弹窗

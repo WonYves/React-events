@@ -14,7 +14,7 @@ export const deleteUser = (id: number) => {
   })
 }
 // 权限控制
-export const changeUserPower = (id: number, rights: []) => {
+export const changeUserPower = (id: number, rights: any) => {
   return request({
     url: `/roles/${id}`,
     method: 'patch',
