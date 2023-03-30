@@ -66,8 +66,8 @@ function SideMenu(props: any) {
       menu.map((item: IMenuList) => {
         // 没有子级和子级的长度为零和有分页的
 
-        const roleList = props.user.userReducer.role.rights
-        if (item.children && item.children.length > 0 && item.pagepermisson && roleList.includes(item.key) ) {
+        const roleList = props.user.userReducer?.role?.rights
+        if (item.children && item.children.length > 0 && item.pagepermisson && roleList?.includes(item.key) ) {
           return (
             <SubMenu key={item.key} title={item.title} icon={iconList[item.key]}>
               {RenderMenu(item.children)}
@@ -75,7 +75,7 @@ function SideMenu(props: any) {
           )
         } else {
           return (
-            (Boolean(item.pagepermisson) && roleList.includes(item.key)) && <Menu.Item key={item.key} icon={iconList[item.key]} onClick={handleMenu.bind(null, item)}>
+            (Boolean(item.pagepermisson) && roleList?.includes(item.key)) && <Menu.Item key={item.key} icon={iconList[item.key]} onClick={handleMenu.bind(null, item)}>
               <span>{item.title}</span>
             </Menu.Item>
           )

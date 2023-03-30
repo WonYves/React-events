@@ -1,9 +1,51 @@
 import { useRoutes } from "react-router"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Redirect from './Redirect'
 import SandBox from "../view/sandBox"
+import axios from "axios"
+import { connect } from "react-redux"
 
-const MRoute = () => {
+interface IRight {
+  key: string
+  label: string
+  id: number
+  grade: number
+  children?: IRight[]
+  pagepermisson?: number
+  rightId?: number
+}
+
+interface IAuth {
+  children: JSX.Element
+  right: string
+}
+
+const MRoute = (props: any) => {
+
+  const { rights } = props
+
+  const [routeList, setRoutList] = useState<IRight[]>([])
+
+  function getData() {
+    Promise.all([
+      axios.get('http://localhost:2222/rights'),
+      axios.get('http://localhost:2222/children')
+    ]).then(res => {
+      console.log([...res[0].data, ...res[1].data])
+      setRoutList([...res[0].data, ...res[1].data])
+    })
+  }
+
+  useEffect(() => {
+    getData()
+  }, [])
+
+  const AuthComponent: React.FC<IAuth> = ({ children, right }) => {
+    const isAuth = rights?.includes(right) && routeList.find((item) => item.key === right)?.pagepermisson === 1
+    return isAuth ? children : LazyLoad('NotFound')
+  }
+
+
   const element = useRoutes([
     {
       path: '/login',
@@ -21,19 +63,20 @@ const MRoute = () => {
         },
         {
           path: 'home',
-          element: (LazyLoad('sandBox/home'))
+          element: <AuthComponent right='/home'>{(LazyLoad('sandBox/home'))}</AuthComponent >
+          // element: (LazyLoad('sandBox/home'))
         },
         {
           path: 'right-manage/right/list',
-          element: (LazyLoad('sandBox/rightManage/rightList'))
+          element: <AuthComponent right='/right-manage/right/list'>{(LazyLoad('sandBox/rightManage/rightList'))}</AuthComponent>
         },
         {
           path: 'right-manage/role/list',
-          element: (LazyLoad('sandBox/rightManage/roleList'))
+          element: <AuthComponent right="/right-manage/role/list">{(LazyLoad('sandBox/rightManage/roleList'))}</AuthComponent>
         },
         {
           path: 'user-manage/list',
-          element: (LazyLoad('sandBox/userManage/userList'))
+          element: <AuthComponent right="/user-manage/list">{(LazyLoad('sandBox/userManage/userList'))}</AuthComponent>
         },
       ]
     },
@@ -61,5 +104,11 @@ const LazyLoad = (path: string) => {
   )
 }
 
+const mapUserList = (state: any) => {
+  return {
+    rights: state.userReducer?.role?.rights
+  }
+}
 
-export default MRoute
+
+export default connect(mapUserList)(MRoute)
