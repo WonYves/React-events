@@ -98,7 +98,7 @@ const MRoute = (props: any) => {
 const LazyLoad = (path: string) => {
   const Comp = React.lazy(() => import(`../view/${path}`))
   return (
-    <React.Suspense fallback={<>加载中...</>}>
+    <React.Suspense fallback={<>加载中....</>}>
       <Comp />
     </React.Suspense>
   )
