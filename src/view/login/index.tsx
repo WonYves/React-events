@@ -15,7 +15,7 @@ const Login = (props:any) => {
   const Login = useCallback(async (username: string, password: string) => {
     const res = await ApiLogin(username, password)
     if (res.data.length === 0) {
-      message.error('登录失败')
+      message.error('用户名或密码错误')
     } else {
       message.success('登录成功!')
       console.log(res.data[0])
