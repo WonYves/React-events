@@ -6,7 +6,7 @@ interface UserType {
 }
 
 interface regionsType{
-  id:number;
+  id?:number;
   value:string;
   title:string;
 }

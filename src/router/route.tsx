@@ -31,7 +31,7 @@ const MRoute = (props: any) => {
       axios.get('http://localhost:2222/rights'),
       axios.get('http://localhost:2222/children')
     ]).then(res => {
-      console.log([...res[0].data, ...res[1].data])
+      // console.log([...res[0].data, ...res[1].data])
       setRoutList([...res[0].data, ...res[1].data])
     })
   }
@@ -64,7 +64,6 @@ const MRoute = (props: any) => {
         {
           path: 'home',
           element: <AuthComponent right='/home'>{(LazyLoad('sandBox/home'))}</AuthComponent >
-          // element: (LazyLoad('sandBox/home'))
         },
         {
           path: 'right-manage/right/list',
@@ -77,6 +76,38 @@ const MRoute = (props: any) => {
         {
           path: 'user-manage/list',
           element: <AuthComponent right="/user-manage/list">{(LazyLoad('sandBox/userManage/userList'))}</AuthComponent>
+        },
+        {
+          path: 'news-manage/add',
+          element: LazyLoad('sandBox/news-manage/newsAdd'),
+        },
+        {
+          path: 'news-manage/draft',
+          element: LazyLoad('sandBox/news-manage/newsDraft'),
+        },
+        {
+          path: 'news-manage/category',
+          element: LazyLoad('sandBox/news-manage/newsCategory'),
+        },
+        {
+          path: 'audit-manage/audit',
+          element: LazyLoad('sandBox/audit-Manage/audit'),
+        },
+        {
+          path: 'audit-manage/list',
+          element: LazyLoad('sandBox/audit-manage/auditList'),
+        },
+        {
+          path: 'publish-manage/unpublished',
+          element: LazyLoad('sandBox/publish-manage/unpublished'),
+        },
+        {
+          path: 'publish-manage/published',
+          element: LazyLoad('sandBox/publish-manage/published'),
+        },
+        {
+          path: 'publish-manage/sunset',
+          element: LazyLoad('sandBox/publish-manage/sunset'),
         },
       ]
     },
