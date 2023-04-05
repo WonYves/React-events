@@ -1,22 +1,37 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Steps, Button, Form, Input, Select } from 'antd';
+import { Steps, Button, Form, Input, Select, message } from 'antd';
 import style from './newadd.module.scss'
-import { getCategories } from '../../../api/news'
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import { getCategories, saveContent } from '../../../api/news'
+import NewsEditor from '../../../component/news-manage/newsEditor'
+import { connect } from 'react-redux';
+import { useNavigate } from 'react-router';
 
-export default function newsAdd() {
+function NewsAdd(props: any) {
+
+  const navigete = useNavigate()
+  const { user } = props
 
   let [stepsCurrent, setStepsCurrent] = useState(0)  //步骤条进度
   const [categoryList, setCategoryList] = useState([]) //分类数据
-  const [quillvalue, setQuillValue] = useState('');
+  const [inputValue, setInputValue] = useState<INewsParams>(); //分类和标题内容
+  const [quillvalue, setQuillValue] = useState(''); //富文本内容
   const EventsForm: any = useRef(null) //事件input
 
   // 分类接口数据
   const getData = useCallback(async () => {
     const res = await getCategories()
-    console.log(res.data)
     setCategoryList(res.data)
+  }, [])
+
+
+  // 提交审核&保存草稿
+  const saveData = useCallback(async (params: INewsParams) => {
+    const res = await saveContent(params)
+    console.log(res.data)
+    params.auditState ? message.success('已提交审核') : message.success('已保存至草稿箱')
+    setTimeout(() => {
+      params.auditState ? navigete('/sandbox/audit-manage/list') : navigete('/sandbox/news-manage/draft')
+    }, 1000)
   }, [])
 
   useEffect(() => {
@@ -27,13 +42,37 @@ export default function newsAdd() {
   const handleNext = () => {
     if (stepsCurrent === 0) {
       EventsForm && EventsForm.current?.validateFields()
-        .then((res: regionsType) => {
-          console.log(res)
+        .then((res: INewsParams) => {
+          setInputValue(res)
           setStepsCurrent(stepsCurrent + 1)
         }).catch((err: any) => {
           console.log(err);
         })
+    } else {
+      console.log(quillvalue)
+      if (quillvalue == '' || quillvalue.trim() === "<p><br></p>") {
+        message.error('事件内容不能为空')
+      } else {
+        setStepsCurrent(stepsCurrent + 1)
+      }
     }
+  }
+
+  const handleSave = (auditState: number) => {
+    const { title, categoryId } = (inputValue as INewsParams)
+    saveData({
+      title,
+      categoryId,
+      content: quillvalue,
+      region: (user.region || '全球'),
+      author: user.username,
+      roleId: user.roleId,
+      auditState,
+      publishState: 0,
+      createTime: Date.now(),
+      star: 0,
+      view: 0
+    })
   }
 
 
@@ -79,18 +118,20 @@ export default function newsAdd() {
           </Form.Item>
         </Form>
       </div>
-      <div className={stepsCurrent === 1 ? '' : `${style.hidden}`}>
-        <ReactQuill theme="snow" value={quillvalue} onChange={setQuillValue} />;
+      <div className={stepsCurrent === 1 ? '' : `${style.hidden}`} style={{ marginTop: 30 }}>
+        <NewsEditor getEditor={(value: any) => {
+          setQuillValue(value)
+        }}></NewsEditor>
       </div>
-      <div className={stepsCurrent === 2 ? '' : `${style.hidden}`}>
+      <div className={stepsCurrent === 2 ? '' : `${style.hidden}`} style={{ marginTop: 30 }}>
         3
       </div>
 
       <div style={{ margin: 20 }}>
-        {stepsCurrent === 2 && <Button type='primary' size='large' style={{ marginRight: 20 }} onClick={() => console.log(111)
+        {stepsCurrent === 2 && <Button type='primary' size='large' style={{ marginRight: 20 }} onClick={() => handleSave(0)
         }>保存草稿</Button>}
 
-        {stepsCurrent === 2 && <Button type='primary' size='large' danger style={{ marginRight: 20 }} onClick={() => console.log(111)
+        {stepsCurrent === 2 && <Button type='primary' size='large' danger style={{ marginRight: 20 }} onClick={() => handleSave(1)
         }>提交审核</Button>}
 
         {stepsCurrent < 2 && <Button type='primary' size='large' style={{ marginRight: 20 }} onClick={handleNext}>下一步</Button>}
@@ -100,3 +141,11 @@ export default function newsAdd() {
     </div>
   )
 }
+
+const mapGetUser = (state: any) => {
+  return {
+    user: state.userReducer
+  }
+}
+
+export default connect(mapGetUser)(NewsAdd)

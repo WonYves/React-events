@@ -14,7 +14,6 @@ function SandBox(props: any) {
   const { token: { colorBgContainer }, } = theme.useToken();
 
   useEffect(() => {
-    console.log(user);
     if(!user.username){
       navigate('/login')
     }
