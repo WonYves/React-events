@@ -1,6 +1,7 @@
 import { legacy_createStore, combineReducers, compose, applyMiddleware } from "redux";
 import reduxThunk from "redux-thunk";
-import userReducer from "../reducer/inedx";
+import userReducer from "../reducer/userReducer";
+import collapsedReducer from "../reducer/collapsedReducer";
 import { persistStore, persistReducer } from 'redux-persist'  //持久化1
 import storage from 'redux-persist/lib/storage' //持久化2
 
@@ -14,7 +15,8 @@ const persistConfig = {
 
 // 多个 reducer合并
 const myReducer = combineReducers({
-  userReducer
+  userReducer,
+  collapsedReducer
 })
 
 const MyPersistReducer = persistReducer(persistConfig, myReducer) //持久化4  变为持久化的reducer

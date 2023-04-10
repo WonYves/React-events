@@ -4,11 +4,6 @@ interface IpverState {
   user: PeopleType | null
 }
 
-interface Iaction {
-  type: string
-  payload: any
-}
-
 const userReducer = (pverState: IpverState = {
   user: {}
 }, action: Iaction) => {

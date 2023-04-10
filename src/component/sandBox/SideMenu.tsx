@@ -38,6 +38,7 @@ function SideMenu(props: any) {
 
   useEffect(() => {
     getList()
+    console.log(props.isCollapsed);
   }, [])
 
   //点击侧边栏
@@ -88,11 +89,11 @@ function SideMenu(props: any) {
   const openKey = ['/' + location.pathname.split('/')[2]]
 
   return (
-    <Sider trigger={null} collapsible collapsed={collapsed}>
+    <Sider trigger={null} collapsible collapsed={props.isCollapsed}>
       <div style={{ display: 'flex', height: '100%', flexDirection: 'column' }}>
         <div className={style.logo}>
           <Avatar size={30} src='https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg'></Avatar>
-          <div className={style.title}>ReactEvents</div>
+          {props.isCollapsed || <div className={style.title}>ReactEvents</div>}
         </div>
         <div style={{ flex: 1, overflow: 'auto' }}>
           <Menu
@@ -112,7 +113,8 @@ function SideMenu(props: any) {
 
 const mapgetUser = (state:any) => {
   return {
-    user : state
+    user : state,
+    isCollapsed: state.collapsedReducer.isCollapsed
   }
 }
 

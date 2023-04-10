@@ -1,25 +1,27 @@
-import { getNews } from '../../../api/news'
+import { getCategories } from '../../../api/news';
 import React, { Fragment, useCallback, useEffect, useState } from 'react'
 import { Table, Button, Switch, Modal, Form, Input, Select, message } from 'antd'
 import type { ColumnsType } from 'antd/es/table';
 import { connect } from 'react-redux';
+import { CloseCircleOutlined } from '@ant-design/icons';
 
 function NewsDraft(props: any) {
 
   const { username } = props.user
 
-  const [news, setNews] = useState([])
+  const [categoryList, setCategoryList] = useState([])
   const [loading, setLoading] = useState(false)
 
-  const getData = useCallback(async (username: string, auditState: number) => {
-    const res = await getNews(username, auditState)
-    setNews(res.data)
+  // 分类接口数据
+  const getData = useCallback(async () => {
+    const res = await getCategories()
+    console.log(res.data)
+    setCategoryList(res.data)
   }, [])
 
   useEffect(() => {
-    console.log(username)
-    getData(username, 1)
-  }, [username])
+    getData()
+  }, [])
 
   const columns: ColumnsType<any> = [
     {
@@ -28,19 +30,9 @@ function NewsDraft(props: any) {
       align: 'center',
     },
     {
-      title: '事件标题',
+      title: '栏目名称',
       align: 'center',
       dataIndex: 'title',
-    },
-    {
-      title: '作者',
-      dataIndex: 'author',
-      align: 'center'
-    },
-    {
-      title: '事件分类',
-      dataIndex: 'categoryId',
-      align: 'center',
     },
     {
       title: '操作',
@@ -48,7 +40,7 @@ function NewsDraft(props: any) {
       render: (record) => {
         return (
           <div>
-            1
+            <Button type='primary' danger icon={<CloseCircleOutlined />} style={{ marginRight: 10 }}></Button>
           </div>
         )
       }
@@ -58,7 +50,7 @@ function NewsDraft(props: any) {
   return (
     <Fragment>
       <Table
-        dataSource={news}
+        dataSource={categoryList}
         columns={columns}
         rowKey='id'
         loading={loading}

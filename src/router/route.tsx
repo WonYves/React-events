@@ -45,7 +45,6 @@ const MRoute = (props: any) => {
       axios.get('http://localhost:2222/rights'),
       axios.get('http://localhost:2222/children')
     ]).then(res => {
-      // console.log([...res[0].data, ...res[1].data])
       setRoutList([...res[0].data, ...res[1].data])
     })
   }
