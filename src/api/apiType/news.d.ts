@@ -4,3 +4,8 @@ interface INewsParams {
   content:string,
   [key:string]:any
 }
+
+type IgetNews  = {
+  username:string,
+  auditState:number
+}

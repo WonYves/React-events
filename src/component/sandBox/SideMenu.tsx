@@ -69,7 +69,7 @@ function SideMenu(props: any) {
         const roleList = props.user.userReducer?.role?.rights
         if (item.children && item.children.length > 0 && item.pagepermisson && roleList?.includes(item.key) ) {
           return (
-            <SubMenu key={item.key} title={item.title} icon={iconList[item.key]}>
+            <SubMenu theme='dark'   key={item.key} title={item.title} icon={iconList[item.key]}>
               {RenderMenu(item.children)}
             </SubMenu>
           )
@@ -97,6 +97,7 @@ function SideMenu(props: any) {
         <div style={{ flex: 1, overflow: 'auto' }}>
           <Menu
             theme="dark"
+            // style={{ background: '#555555'}}
             mode="inline"
             selectedKeys={selectKey}
             defaultOpenKeys={openKey}

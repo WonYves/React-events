@@ -22,3 +22,11 @@ export const getNews = (username:string, auditState:number) => {
     url: `/news?author=${username}&auditState=${auditState}&_expand=category`
   })
 }
+
+// 删除事件
+export const deleteNews = (id: number) => {
+  return request({
+    url: `/news/${id}`,
+    method: 'delete'
+  })
+}

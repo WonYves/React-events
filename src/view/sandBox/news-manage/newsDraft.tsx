@@ -1,8 +1,11 @@
-import { getNews } from '../../../api/news'
+import { getNews, deleteNews } from '../../../api/news'
 import React, { Fragment, useCallback, useEffect, useState } from 'react'
 import { Table, Button, Switch, Modal, Form, Input, Select, message } from 'antd'
 import type { ColumnsType } from 'antd/es/table';
 import { connect } from 'react-redux';
+import { FormOutlined, CloseCircleOutlined, CloudUploadOutlined } from '@ant-design/icons'
+
+const { confirm } = Modal
 
 function NewsDraft(props: any) {
 
@@ -16,8 +19,27 @@ function NewsDraft(props: any) {
     setNews(res.data)
   }, [])
 
+  const deleteData = useCallback(async (id: number) => {
+    const res = await deleteNews(id)
+    message.success('删除成功')
+    getData(username, 0)
+  }, [])
+
+  const handleDelete = (id: number) => {
+    confirm({
+      title: '确定要删除吗?',
+      okText: '确定',
+      cancelText: '取消',
+      onOk() {
+        deleteData(id)
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    })
+  }
+
   useEffect(() => {
-    console.log(username)
     getData(username, 0)
   }, [username])
 
@@ -48,7 +70,11 @@ function NewsDraft(props: any) {
       render: (record) => {
         return (
           <div>
-            1
+            <div>
+              <Button type='primary' danger icon={<CloseCircleOutlined />} style={{ marginRight: 10 }} onClick={() => handleDelete(record.id)} ></Button>
+              <Button type='primary' icon={<FormOutlined />} style={{ marginRight: 10 }}></Button>
+              <Button icon={<CloudUploadOutlined />} ></Button>
+            </div>
           </div>
         )
       }
