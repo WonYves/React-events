@@ -20,6 +20,7 @@ function NewsAdd(props: any) {
   // 分类接口数据
   const getData = useCallback(async () => {
     const res = await getCategories()
+    console.log(res.data)
     setCategoryList(res.data)
   }, [])
 
