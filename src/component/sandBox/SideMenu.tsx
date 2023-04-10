@@ -98,7 +98,6 @@ function SideMenu(props: any) {
         <div style={{ flex: 1, overflow: 'auto' }}>
           <Menu
             theme="dark"
-            // style={{ background: '#555555'}}
             mode="inline"
             selectedKeys={selectKey}
             defaultOpenKeys={openKey}
