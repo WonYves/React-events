@@ -124,9 +124,6 @@ function NewsAdd(props: any) {
           setQuillValue(value)
         }}></NewsEditor>
       </div>
-      <div className={stepsCurrent === 2 ? '' : `${style.hidden}`} style={{ marginTop: 30 }}>
-        3
-      </div>
 
       <div style={{ margin: 20 }}>
         {stepsCurrent === 2 && <Button type='primary' size='large' style={{ marginRight: 20 }} onClick={() => handleSave(0)
