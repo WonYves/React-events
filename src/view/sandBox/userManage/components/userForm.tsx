@@ -81,7 +81,7 @@ export default function UserForm(props: IUserporps) {
         <Form.Item
           label="用户名"
           name="username"
-          rules={[{ required: true, message: '请输入用户名!' }]}
+          rules={[{ required: true, message: '请输入用户名称!' }]}
         >
           <Input />
         </Form.Item>
